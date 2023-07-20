@@ -2,9 +2,38 @@ GET http://127.0.0.1:3000
 
 ###
 
-POST http://127.0.0.1:3000/users
+POST http://127.0.0.1:3000/todos
 Content-Type: application/json
 
 {
-    "username": "Sample User"
+    "text": "First Todo"
 }
+
+###
+
+GET http://127.0.0.1:3000/todos
+Content-Type: application/json
+
+###
+
+GET http://127.0.0.1:3000/todos/1
+Content-Type: application/json
+
+{
+  "text": "First Todo"
+}
+
+###
+
+PATCH http://127.0.0.1:3000/todos/1
+Content-Type: application/json
+
+{
+  "text": "First Todo update",
+  "completed": true
+}
+
+###
+
+DELETE http://127.0.0.1:3000/todos/1
+Content-Type: application/json

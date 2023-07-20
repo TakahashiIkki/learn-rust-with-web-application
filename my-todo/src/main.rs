@@ -53,9 +53,8 @@ mod test {
     use super::*;
     use crate::repositories::{CreateTodo, Todo};
     use axum::response::Response;
-    use axum::{body::Body, http::{header, Method, Request, StatusCode}, Json};
+    use axum::{body::Body, http::{header, Method, Request, StatusCode}};
     use tower::ServiceExt;
-    use tracing_subscriber::fmt::format;
 
     fn build_todo_req_with_json(path: &str, method: Method, json_body: String) -> Request<Body> {
         Request::builder()

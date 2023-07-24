@@ -5,38 +5,51 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import "modern-css-reset";
 import TodoForm from "./components/TodoForm.tsx";
 import TodoList from "./components/TodoList.tsx";
+import {
+  addTodoItem,
+  getTodoItems,
+  updateTodoItem,
+  deleteTodoItem,
+} from "./lib/api/todo.ts";
 import { NewTodoPayload, Todo } from "./types/todo";
 
 const TodoApp: FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const createId = () => todos.length + 1;
   const onSubmit = async (payload: NewTodoPayload) => {
     if (!payload.text) {
       return;
     }
 
-    setTodos((prev) => [
-      { id: createId(), text: payload.text, completed: false },
-      ...prev,
-    ]);
+    await addTodoItem(payload);
+    // APIより再度Todoを取得
+    const todos = await getTodoItems();
+    setTodos(todos);
   };
-  const onUpdate = (updateTodo: Todo) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === updateTodo.id) {
-          return {
-            ...todo,
-            ...updateTodo,
-          };
-        }
-        return todo;
-      })
-    );
+
+  const onUpdate = async (updateTodo: Todo) => {
+    await updateTodoItem(updateTodo);
+    // APIより再度Todoを取得
+    const todos = await getTodoItems();
+    setTodos(todos);
   };
+
+  const onDelete = async (id: number) => {
+    await deleteTodoItem(id);
+    // APIより再度Todoを取得
+    const todos = await getTodoItems();
+    setTodos(todos);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const todos = await getTodoItems();
+      setTodos(todos);
+    })();
+  }, []);
 
   return (
     <>
@@ -67,7 +80,7 @@ const TodoApp: FC = () => {
         <Box maxWidth={700} width="100%">
           <Stack spacing={5}>
             <TodoForm onSubmit={onSubmit} />
-            <TodoList todos={todos} onUpdate={onUpdate} />
+            <TodoList todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
           </Stack>
         </Box>
       </Box>

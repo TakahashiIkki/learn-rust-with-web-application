@@ -1,6 +1,17 @@
-import { FC, ChangeEventHandler } from "react";
+import { FC, ChangeEventHandler, useState, useEffect } from "react";
+import { modalInnerStyle } from "../styles/modal.ts";
 import { Todo } from "../types/todo";
-import { Card, Button, Grid, Checkbox, Stack, Typography } from "@mui/material";
+import {
+  Card,
+  Button,
+  Grid,
+  Checkbox,
+  Stack,
+  Typography,
+  Modal,
+  Box,
+  TextField,
+} from "@mui/material";
 
 type Props = {
   todo: Todo;
@@ -9,17 +20,32 @@ type Props = {
 };
 
 const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete }) => {
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState("");
+
+  useEffect(() => {
+    setEditText(todo.text);
+  }, [todo]);
+
   const handleCompletedCheckbox: ChangeEventHandler = () => {
     onUpdate({
       ...todo,
       completed: !todo.completed,
-    })
-  }
+    });
+  };
+
+  const onCloseEditModal = () => {
+    onUpdate({
+      ...todo,
+      text: editText,
+    });
+    setEditing(false);
+  };
 
   const handleDelete = () => onDelete(todo.id);
 
   return (
-    <Card sx={{p: 1}}>
+    <Card sx={{ p: 1 }}>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs={1}>
           <Checkbox
@@ -27,19 +53,37 @@ const TodoItem: FC<Props> = ({ todo, onUpdate, onDelete }) => {
             checked={todo.completed}
           />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={8}>
           <Stack spacing={1}>
             <Typography variant="caption" fontSize={16}>
               {todo.text}
             </Typography>
           </Stack>
         </Grid>
-        <Grid item xs={1}>
-          <Button onClick={handleDelete} color="error">
-            delete
-          </Button>
+        <Grid item xs={2}>
+          <Stack direction="row" spacing={1}>
+            <Button onClick={() => setEditing(true)} color="info">
+              edit
+            </Button>
+            <Button onClick={handleDelete} color="error">
+              delete
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
+
+      <Modal open={editing} onClose={onCloseEditModal}>
+        <Box sx={modalInnerStyle}>
+          <Stack spacing={2}>
+            <TextField
+              size="small"
+              label="todo text"
+              defaultValue={todo.text}
+              onChange={(e) => setEditText(e.target.value)}
+            />
+          </Stack>
+        </Box>
+      </Modal>
     </Card>
   );
 };

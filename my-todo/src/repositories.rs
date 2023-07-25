@@ -1,4 +1,5 @@
 pub mod todo;
+pub mod label;
 
 use thiserror::Error;
 
@@ -8,4 +9,6 @@ enum RepositoryError {
     Unexpected(String),
     #[error("NotFound, id is {0}")]
     NotFound(i32),
+    #[error("Duplicate data, id is {0}")]
+    Duplicate(i32),
 }

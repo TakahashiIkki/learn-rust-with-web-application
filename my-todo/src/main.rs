@@ -1,7 +1,7 @@
 mod handlers;
 mod repositories;
 
-use crate::repositories::{TodoRepository, TodoRepositoryForDb};
+use crate::repositories::todo::{TodoRepository, TodoRepositoryForDb};
 use axum::{
     extract::Extension,
     routing::{get, post},
@@ -68,7 +68,7 @@ async fn root() -> &'static str {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::repositories::{CreateTodo, Todo, test_utils::TodoRepositoryForMemory};
+    use crate::repositories::todo::{CreateTodo, Todo, test_utils::TodoRepositoryForMemory};
     use axum::response::Response;
     use axum::{body::Body, http::{header, Method, Request, StatusCode}};
     use tower::ServiceExt;

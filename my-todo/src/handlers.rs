@@ -9,7 +9,7 @@ use serde::de::DeserializeOwned;
 use std::sync::Arc;
 use validator::Validate;
 
-use crate::repositories::{CreateTodo, TodoRepository, UpdateTodo};
+use crate::repositories::todo::{CreateTodo, TodoRepository, UpdateTodo};
 
 #[derive(Debug)]
 pub struct ValidatedJson<T>(T);
